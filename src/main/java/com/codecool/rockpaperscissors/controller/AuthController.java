@@ -1,14 +1,15 @@
 package com.codecool.rockpaperscissors.controller;
 
+
 import com.codecool.rockpaperscissors.model.Player;
 import com.codecool.rockpaperscissors.repository.PlayerRepository;
 import com.codecool.rockpaperscissors.security.JwtTokenServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -42,9 +43,9 @@ public class AuthController {
 
     @PostMapping("/sign-in")
     public ResponseEntity signIn(@RequestBody Map<String, Object> data) {
+        String username = data.get("username").toString();
+        String password = data.get("password").toString();
         try {
-            String username = data.get("username").toString();
-            String password = data.get("password").toString();
             // authenticationManager.authenticate calls loadUserByUsername in CustomUserDetailsService
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             List<String> roles = authentication.getAuthorities()
@@ -68,7 +69,6 @@ public class AuthController {
     public ResponseEntity register(@RequestBody Map<String, Object> data) {
         String username = data.get("username").toString();
         String password = data.get("password").toString();
-        String email = data.get("email").toString();
         try {
             Player newUser = Player.builder().userName(username).password(passwordEncoder.encode(password)).roles(Arrays.asList("ROLE_USER")).build();
             userRepository.save(newUser);

@@ -1,6 +1,7 @@
 package com.codecool.rockpaperscissors.security;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenServices jwtTokenServices;
 
@@ -34,14 +36,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/auth/**").permitAll() // allowed by anyone
                 .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/save-my-score").permitAll()
+                .antMatchers(HttpMethod.POST, "/friend/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/friend/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/friend/**").permitAll()
 
                 .anyRequest().authenticated() // anything else requires authentication
                 .and()
                 .addFilterBefore(new JwtTokenFilter(jwtTokenServices), UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Bean
     @Override
+    @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }

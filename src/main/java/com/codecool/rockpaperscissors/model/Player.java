@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -31,9 +32,21 @@ public class Player {
     @Column(nullable = false)
     private int score;
 
+    @Column(nullable = false)
+    private int wins;
+
+    @Column(nullable = false)
+    private int defeats;
+
+    @Column(nullable = false)
+    private int draws;
+
     // roles of the user (ADMIN, USER,..)
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    @ElementCollection
+    private List<String> friends;
 
 }
